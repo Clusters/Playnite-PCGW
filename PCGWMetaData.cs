@@ -87,6 +87,17 @@ namespace PCGWMetaData
                 //File.WriteAllText("c:\\temp\\log.txt", JsonConvert.SerializeObject(result));
                 if (result is null || result.Query is null || result.Query.Data is null)
                     return null;
+                var local_play = result.Query.Data.Where(i => i.Property == "Local_play").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
+                if (local_play == "true")
+                {
+                    tags.Add("Local Multiplayer");
+                    var local_play_mode = result.Query.Data.Where(i => i.Property == "Local_play_modes").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
+                    if (local_play_mode != null)
+                        tags.Add("Local MP Mode: " + local_play_mode);
+                    var local_play_players = result.Query.Data.Where(i => i.Property == "Local_play_players").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
+                    if (local_play_players != null && local_play_players != "0")
+                        tags.Add("Local MP Playercount: " + local_play_players);
+                }
                 //plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(tags));
             }
             tags.ForEach(t => t.ToLowerInvariant().Trim()); // Todo: option
