@@ -9,6 +9,7 @@ using System.Web;
 using Bluscream;
 using PCGWMetaData.Classes;
 using System.Windows.Controls;
+//using System.IO;
 
 namespace PCGWMetaData
 {
@@ -67,7 +68,7 @@ namespace PCGWMetaData
 
         public override List<string> GetTags()
         {
-            // api.Dialogs.ShowMessage("Requested metadata for game " + options.GameData.Name);
+            //plugin.api.Dialogs.ShowMessage("Requested metadata for game " + options.GameData.Name);
             var tags = new List<string>();
             var l_ = plugin.api.Database.Games.FirstOrDefault(g => g.Id == options.GameData.Id);
             if (l_ != null)
@@ -82,12 +83,11 @@ namespace PCGWMetaData
             if (_result != null)
             {
                 var result = _result.Data();
-                // api.Dialogs.ShowMessage(JsonConvert.SerializeObject(result));
-                if (result is null || result.Query is null || result.Query.Data is null) return null;
-                var engine = result.Query.Data.Where(i => i.Property == "Uses_engine").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
-                if (engine != null)
-                    tags.Add("engine:" + engine.Replace("#404#", ""));
-                // api.Dialogs.ShowMessage(JsonConvert.SerializeObject(tags));
+                //plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(result));
+                //File.WriteAllText("c:\\temp\\log.txt", JsonConvert.SerializeObject(result));
+                if (result is null || result.Query is null || result.Query.Data is null)
+                    return null;
+                //plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(tags));
             }
             tags.ForEach(t => t.ToLowerInvariant().Trim()); // Todo: option
             return tags;
