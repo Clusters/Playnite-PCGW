@@ -68,9 +68,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-        <PostBuildEvent>copy "$(TargetPath)" "D:\OneDrive\Trans-Folder\$(TargetFileName)"
-copy "$(TargetPath)" "C:\Users\blusc\AppData\Roaming\Playnite\Extensions\PCGWMetadata\$(TargetFileName)"
-start "" "C:\Users\blusc\AppData\Local\Playnite\Playnite.DesktopApp.exe" 1&gt;NUL 2&gt;NUL
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\Andi\AppData\Local\Playnite\Extensions\PCGWMetadata\$(TargetFileName)"
+start "" "C:\Users\Andi\AppData\Local\Playnite\Playnite.DesktopApp.exe" 1&gt;NUL 2&gt;NUL
 taskkill /f /im msbuild.exe 1&gt;NUL 2&gt;NUL
 SET ERRORLEVEL=0</PostBuildEvent>
   </PropertyGroup>
