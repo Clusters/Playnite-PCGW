@@ -38,7 +38,8 @@ namespace PCGWMetaData.Classes
         private Game addGame(string name)
         {
             var game = new Game(name, this);
-            //plugin.api.Dialogs.ShowMessage(name + " " + game.Name + " " + game.EncodedUri());
+            plugin.api.Dialogs.ShowMessage(name + " " + game.Name + " " + game.EncodedUri());
+            plugin.api.Dialogs.ShowMessage(string.Format(PCGWMetaDataPlugin.url_base, game.EncodedUri()));
             var json = plugin.webClient.DownloadString(string.Format(PCGWMetaDataPlugin.url_base, game.EncodedUri()));
             game.File().WriteAllText(json);
             games.Add(game);

@@ -9,6 +9,7 @@ using System.Web;
 using Bluscream;
 using PCGWMetaData.Classes;
 using System.Windows.Controls;
+using Playnite.SDK.Models;
 //using System.IO;
 
 namespace PCGWMetaData
@@ -66,41 +67,44 @@ namespace PCGWMetaData
             return new List<MetadataField> { MetadataField.Tags };
         }
 
-        public override List<string> GetTags()
+        public override IEnumerable<MetadataProperty> GetTags(GetMetadataFieldArgs args)
         {
-            //plugin.api.Dialogs.ShowMessage("Requested metadata for game " + options.GameData.Name);
-            var tags = new List<string>();
+            plugin.api.Dialogs.ShowMessage("Requested metadata for game " + options.GameData.Name);
+            var tags = new List<MetadataProperty>();
             var l_ = plugin.api.Database.Games.FirstOrDefault(g => g.Id == options.GameData.Id);
             if (l_ != null)
             {
                 var l__ = l_.Tags;
                 if (l__ != null)
                 {
-                    tags = l__.Select(t => t.Name).ToList();
+                    /* tags = l__.Select(t => t.Name).ToList(); */
+                    foreach (Tag t in l__)
+                    {
+                        tags.Add(new MetadataNameProperty(t.Name.ToLowerInvariant().Trim()));
+                    }
                 }
             }
             var _result = plugin.cache.getGame(options.GameData.Name);
             if (_result != null)
             {
                 var result = _result.Data();
-                //plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(result));
+                plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(result));
                 //File.WriteAllText("c:\\temp\\log.txt", JsonConvert.SerializeObject(result));
                 if (result is null || result.Query is null || result.Query.Data is null)
                     return null;
                 var local_play = result.Query.Data.Where(i => i.Property == "Local_play").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
                 if (local_play == "true")
                 {
-                    tags.Add("Local Multiplayer");
+                    tags.Add(new MetadataNameProperty("Local Multiplayer".ToLowerInvariant().Trim()));
                     var local_play_mode = result.Query.Data.Where(i => i.Property == "Local_play_modes").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
                     if (local_play_mode != null)
-                        tags.Add("Local MP Mode: " + local_play_mode);
+                        tags.Add(new MetadataNameProperty(("Local MP Mode: " + local_play_mode).ToLowerInvariant().Trim()));
                     var local_play_players = result.Query.Data.Where(i => i.Property == "Local_play_players").FirstOrDefault()?.Dataitem.FirstOrDefault().Item;
                     if (local_play_players != null && local_play_players != "0")
-                        tags.Add("Local MP Playercount: " + local_play_players);
+                        tags.Add(new MetadataNameProperty(("Local MP Playercount: " + local_play_players).ToLowerInvariant().Trim()));
                 }
-                //plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(tags));
+                plugin.api.Dialogs.ShowMessage(JsonConvert.SerializeObject(tags));
             }
-            tags.ForEach(t => t.ToLowerInvariant().Trim()); // Todo: option
             return tags;
         }
     }
